@@ -1,0 +1,19 @@
+{
+    "input_directory": "./input",
+    "output_directory": "./output",
+    "processing_interval": "5m",
+    "log_level": "info",
+    "max_file_size_mb": 100,
+    "concurrent_workers": 3,
+    "duplicate_check_hours": 1,
+    "cleanup_old_files_days": 30,
+    "output_format": "json",
+    "include_metadata": true,
+    "include_data": true,
+    "supported_extensions": [
+        ".h5",
+        ".hdf5",
+        ".he5",
+        ".nc"
+    ]
+}

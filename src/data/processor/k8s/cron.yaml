@@ -1,0 +1,32 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: nasa-earthdata
+---
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: nasa-processor
+spec:
+  schedule: "* * * * *"   # every minute
+  concurrencyPolicy: Forbid
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          restartPolicy: OnFailure
+          containers:
+            - name: nasa-processor
+              image: nasa-processor:latest
+              imagePullPolicy: Never
+              args: ["--input-dir", "/data/input", "--output-dir", "/data/output", "--once"]
+              volumeMounts:
+                - mountPath: /data
+                  name: data-volume
+          volumes:
+            - name: data-volume
+              persistentVolumeClaim:
+                claimName: nasa-data-pvc

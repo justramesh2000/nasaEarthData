@@ -1,0 +1,52 @@
+# Git
+.git
+.gitignore
+
+# Documentation
+README.md
+*.md
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+*_test.go
+test/
+tests/
+
+# Build artifacts
+*.exe
+*.dll
+*.so
+*.dylib
+nasa-hdf-processor
+
+# Data files (these should be mounted as volumes)
+data/
+*.h5
+*.hdf5
+*.he5
+*.nc
+
+# Go specific
+vendor/

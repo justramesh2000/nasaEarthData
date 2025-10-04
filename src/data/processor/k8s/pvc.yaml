@@ -1,0 +1,14 @@
+# PersistentVolumeClaim for input data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: nasa-data-pvc
+  namespace: nasa-earthdata
+  labels:
+    app: nasa-data-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

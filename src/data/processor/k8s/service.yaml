@@ -1,0 +1,22 @@
+# Service for the NASA HDF Processor (for future monitoring/API endpoints)
+apiVersion: v1
+kind: Service
+metadata:
+  name: nasa-hdf-processor-service
+  namespace: default
+  labels:
+    app: nasa-hdf-processor
+    component: data-processor
+spec:
+  type: ClusterIP
+  ports:
+  - name: metrics
+    port: 8080
+    targetPort: 8080
+    protocol: TCP
+  - name: health
+    port: 8081
+    targetPort: 8081
+    protocol: TCP
+  selector:
+    app: nasa-hdf-processor

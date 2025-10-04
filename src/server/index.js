@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 const axios = require("axios");
+const fs = require('fs');
+const csv = require('csv-parser');
+const geolib = require('geolib')
 
 const app = express();
 const PORT = process.env.PORT || 5050;
@@ -8,6 +11,18 @@ app.use(cors());
 app.use(express.json());
 
 let airQualityCache = null;
+
+let data = [];
+fs.createReadStream('data.csv')
+  .pipe(csv())
+  .on('data', (row) => {
+    row.latitude = parseFloat(row.latitude);
+    row.longitude = parseFloat(row.longitude);
+    data.push(row);
+  })
+  .on('end', () => {
+    console.log(`Loaded ${data.length} records from csv.`);
+  });
 
 app.get("/", (req, res) => {
   res.send("Nasa weather API is running");
@@ -42,6 +57,26 @@ app.get("/api/data", (req, res) => {
     res.status(500).json({ error: "Failed to fetch air quality data" });
   }
 });
+
+app.get('/api/csvdata', (req,res) => {
+  const {lat, lng, radius} = req.query;
+  if (!lat || !lng || !radius) {
+    return res.status(400).json({error: 'Missing lat, lng, or radius'});
+  }
+
+  const center = { latitude: parseFloat(lat), longitude: parseFloat(lng) };
+  const radiusMiles = parseFloat(radius);
+  const radiusMeters = radiusMiles * 1609.34;
+
+  const filtered = data.filter((point) => {
+    return geolib.isPointWithinRadius(
+      { latitude: point.latitude, longitude: point.longitude },
+      center,
+      radiusMeters
+    );
+  });
+  res.json(filtered)
+})
 
 app.listen(PORT, () => {
   console.log(`Weather server is listening on port ${PORT}`);
